@@ -1,0 +1,30 @@
+{% extends "job/base.html"%}
+{% block content%}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Description</th>
+      <th scope="col">Created</th>
+      <th scope="col">Last Executed</th>
+      <th scope="col">Status</th>
+      <th scope="col">Control</th>
+    </tr>
+  </thead>
+  <tbody>
+{% for job in jobs %}
+    <tr>
+      <th scope="row"><a href="{% url 'job-update' job.id %}">{{job.description}}</a></th>
+      <td>{{job.created}}</td>
+      <td>{{job.last_executed}}</td>
+      <td>{{job.status}}</td>
+      {% if job.is_runnable %}
+        <td scope="row"><a href="{% url 'job-run' job.id %}">run</a></td>
+      {% else %}
+        <td scope="row"></td>
+      {% endif %}
+
+    </tr>
+{% endfor%}
+  </tbody>
+</table>
+{% endblock content%}
