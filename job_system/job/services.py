@@ -253,7 +253,7 @@ class JobRunner:
 
     def run_job(self, task_id):
         if task_id in self.active_tasks.values():
-            raise JobAlreadyRunningException()
+            return f"Task {Job.objects.filter(pk=task_id).first().description} is running already"
         else:
             try:
                 job = Job.objects.filter(pk=task_id).first()

@@ -4,10 +4,14 @@ from django.views.generic import ListView, UpdateView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from .services import JobRunner
+from django.contrib import messages
+
 
 
 def run_task(request, pk):
-    JobRunner().run_job(pk)
+    message = JobRunner().run_job(pk)
+    if message:
+        messages.warning(request, message)
     return render(request, 'job/joblist.html', {'jobs': Job.objects.all()})
 
 
@@ -23,7 +27,7 @@ class JobListView(ListView):
 
 class JobUpdateView(UpdateView):
     model = Job
-    fields = ['description', 'scheduling']
+    fields = ['description', 'document', 'scheduling']
 
     def get_success_url(self):
         return reverse('job-list')
