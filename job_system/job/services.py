@@ -18,7 +18,6 @@ class NoWorkersAvailable(Exception):
     pass
 
 
-
 # internal module helper functions
 def _handle_thread_exception(request, exc_info):
     """Default exception handler callback function.
@@ -60,7 +59,7 @@ def makeRequests(callable_, args_list, callback=None,
 class WorkerThread(threading.Thread):
     """Background thread connected to the requests/results queues.
     A worker thread sits in the background and picks up work requests from
-    one queue and puts the results in another until it is dismissed.
+    one queue and puts the results in another.
     """
 
     def __init__(self, requests_queue, results_queue, poll_timeout=5, **kwargs):
@@ -91,6 +90,8 @@ class WorkerThread(threading.Thread):
                 except:
                     request.exception = True
                     self._results_queue.put((request, sys.exc_info()))
+                finally:
+                    JobRunner().release_job(request.requestID)
 
 
 
@@ -216,11 +217,9 @@ class ThreadPool(threading.Thread):
                 # has an exception occured?
                 if request.exception and request.exc_callback:
                     request.exc_callback(request, result)
-                    JobRunner.release_job(request.requestID)
                 # hand results to callback, if any
                 if request.callback and not (request.exception and request.exc_callback):
                     request.callback(request, result)
-                    JobRunner.release_job(request.requestID)
                 del self.workRequests[request.requestID]
             except Exception as e:
                 break
@@ -238,14 +237,10 @@ class ThreadPool(threading.Thread):
             try:
                 time.sleep(0.5)
                 self.poll()
-                print("pool_object thread working...")
-                print("(active worker threads: %i)" % (threading.activeCount() - 2,))
             except KeyboardInterrupt:
                 print("**** Interrupted!")
                 break
             except NoResultsPending:
-                print("**** No pending results.")
-                print("(active worker threads: %i)" % (threading.activeCount() - 2,))
                 continue
 
 
