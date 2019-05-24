@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Job
 from django.views.generic import ListView, UpdateView, CreateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -12,8 +12,7 @@ def run_task(request, pk):
     message = JobRunner().run_job(pk)
     if message:
         messages.warning(request, message)
-    return render(request, 'job/joblist.html', {'jobs': Job.objects.all()})
-
+    return redirect('job-list')
 
 class JobListView(ListView):
 
