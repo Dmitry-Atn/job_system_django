@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Job
-from django.views.generic import ListView, UpdateView, CreateView
+from django.views.generic import ListView, UpdateView, CreateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from .services import JobRunner
@@ -43,3 +43,11 @@ class JobCreateView(CreateView):
 
     def get_success_url(self):
         return reverse('job-list')
+
+
+class JobDeleteView(DeleteView):
+    model = Job
+
+    def get_success_url(self):
+        return reverse('job-list')
+

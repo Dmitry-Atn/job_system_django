@@ -18,7 +18,7 @@
       <td>{{job.last_executed}}</td>
       <td>{{job.status}}</td>
       {% if job.is_runnable %}
-        <td scope="row"><a href="{% url 'job-run' job.id %}">run</a></td>
+        <td scope="row"><a href="{% url 'job-run' job.id %}">run</a> <a href="{% url 'job-delete' job.id %}">delete</a></td>
       {% else %}
         <td scope="row"></td>
       {% endif %}

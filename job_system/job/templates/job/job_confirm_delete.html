@@ -1,0 +1,10 @@
+{% extends "job/base.html"%}
+{% block content%}
+    <p>Are you sure you want to delete "{{ object.get_description }}"?</p>
+     <form method="post">
+    {% csrf_token %}
+         {{form.as_p}}
+    <input type="submit" value="Confirm" />
+    </form>
+{% endblock content%}
+description

@@ -36,5 +36,8 @@ class Job(models.Model):
     def is_runnable(self):
         return self.status != Job.STATUS_RUNNING
 
+    def get_description(self):
+        return self.description
+
     def __str__(self):
         return f'{self.pk}: {self.last_executed} {self.document} {self.status}'
